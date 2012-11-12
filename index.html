@@ -32,7 +32,8 @@
       });
 
       var AccountsList = Backbone.Collection.extend({
-        model: Account
+        model: Account,
+        url: '/tapmatch31/ajax/accounts'
       });
 
       var AccountRow = Backbone.View.extend({
@@ -51,6 +52,7 @@
         initialize: function() {
           this.accounts = accounts;
           AccountsList.bind('all', this.render, this);
+          this.accounts.fetch();
         },
         render: function() {
           var ul = $(this.el);
@@ -63,11 +65,11 @@
         }
       });
 
-      //TODO: get these from the server
-      var foo = new Account({ name: "Foo Account", status: "Active" });
-      var bar = new Account({ name: "Bar Account", status: "Paused" });
-      var baz = new Account({ name: "Baz Account", status: "Active" });
-      var accounts = new AccountsList([foo, bar, baz]);
+      //var foo = new Account({ name: "Foo Account", status: "Active" });
+      //var bar = new Account({ name: "Bar Account", status: "Paused" });
+      //var baz = new Account({ name: "Baz Account", status: "Active" });
+      //var accounts = new AccountsList([foo, bar, baz]);
+      var accounts = new AccountsList;
 
       var App = new AccountsView;
       App.render();

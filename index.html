@@ -6,9 +6,73 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script type="text/javascript" src="js/underscore-min.js"></script>
     <script type="text/javascript" src="js/backbone-min.js"></script>
-    <script type="text/javascript">
+
+    <!-- Templates (must go before view definitions -->
+    <script type="text/template" id="account-template">
+      <label><%- name %></label><a href="#"><%- status %></a>
     </script>
+
+    <style type="text/css">
+      .account-row a {
+        padding-left: 5px
+      }
+    </style>
   </head>
   <body>
+    <section id="main">
+      <ul id="accounts-list">
+      </ul>
+    </section>
+
+    <!-- backbone definitions -->
+    <script type="text/javascript">
+      var Account = Backbone.Model.extend({
+        name: null,
+        status: null
+      });
+
+      var AccountsList = Backbone.Collection.extend({
+        model: Account
+      });
+
+      var AccountRow = Backbone.View.extend({
+        tagName: "li",
+        className: "account-row",
+        template: _.template($('#account-template').html()),
+        render: function() {
+          $(this.el).html(this.template(this.model.toJSON()));
+          return this;
+        },
+      });
+
+      // The #accounts-list ul is governed by this view
+      var AccountsView = Backbone.View.extend({
+        el: $("#accounts-list"),
+        initialize: function() {
+          this.accounts = accounts;
+          AccountsList.bind('all', this.render, this);
+        },
+        render: function() {
+          var ul = $(this.el);
+          ul.children().remove();
+
+          this.accounts.each(function(account) {
+            var rowView = new AccountRow({ model: account });
+            var toAppend = rowView.render().el;
+            ul.append(toAppend);
+          });
+        }
+      });
+
+      //TODO: get these from the server
+      var foo = new Account({ name: "Foo Account", status: "Active" });
+      var bar = new Account({ name: "Bar Account", status: "Paused" });
+      var baz = new Account({ name: "Baz Account", status: "Active" });
+      var accounts = new AccountsList([foo, bar, baz]);
+
+      var App = new AccountsView;
+      App.render();
+    </script>
+
   </body>
 </html>

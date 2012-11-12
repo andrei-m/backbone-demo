@@ -33,7 +33,7 @@
 
       var AccountsList = Backbone.Collection.extend({
         model: Account,
-        url: '/tapmatch31/ajax/accounts'
+        url: '/kyle/ajax/advertiser/backboneAccounts'
       });
 
       var AccountRow = Backbone.View.extend({
@@ -51,7 +51,7 @@
         el: $("#accounts-list"),
         initialize: function() {
           this.accounts = accounts;
-          AccountsList.bind('all', this.render, this);
+          this.accounts.on('all', this.render, this);
           this.accounts.fetch();
         },
         render: function() {
@@ -65,14 +65,9 @@
         }
       });
 
-      //var foo = new Account({ name: "Foo Account", status: "Active" });
-      //var bar = new Account({ name: "Bar Account", status: "Paused" });
-      //var baz = new Account({ name: "Baz Account", status: "Active" });
-      //var accounts = new AccountsList([foo, bar, baz]);
       var accounts = new AccountsList;
 
-      var App = new AccountsView;
-      App.render();
+      var app = new AccountsView;
     </script>
 
   </body>
